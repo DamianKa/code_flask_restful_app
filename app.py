@@ -12,6 +12,9 @@ class Item(Resource):
         return {'item': item}, 200 if item else 404 # the most popular interview question - 404 - not found.
 
     def post(self, name):
+        if next(filter(lambda x: x['name'] == name, items), None):
+            return {'message': "An item with name '{}' already exists.".format(name)}, 400 # 400 is bad request
+
         data = request.get_json() # can use (force = True) or (silent = True)
         item = {'name': name, 'price': data['price']}
         items.append(item)
